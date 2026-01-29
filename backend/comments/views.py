@@ -62,14 +62,17 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Comment.objects.all()
 
     def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        # Set author to Admin and current time if not provided
-        if 'author' not in data:
-            data['author'] = 'Admin'
-        if 'date' not in data:
-            data['date'] = timezone.now().isoformat()
-        if 'likes' not in data:
-            data['likes'] = 0
+        # Build data dict with defaults
+        data = {
+            'author': request.data.get('author', 'Admin'),
+            'text': request.data.get('text', ''),
+            'date': request.data.get('date', timezone.now().isoformat()),
+            'likes': request.data.get('likes', 0),
+            'image': request.data.get('image', ''),
+        }
+        # Only include parent if provided
+        if 'parent' in request.data and request.data['parent']:
+            data['parent'] = request.data['parent']
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
