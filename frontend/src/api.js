@@ -42,7 +42,7 @@ export async function deleteComment(id) {
 }
 
 export async function deleteAllComments() {
-  const response = await fetch(`${API_BASE}/comments/delete-all/`, {
+  const response = await fetch(`${API_BASE}/comments/delete_all/`, {
     method: 'DELETE',
   });
   if (!response.ok) throw new Error('Failed to delete all comments');
