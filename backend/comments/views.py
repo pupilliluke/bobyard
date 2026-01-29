@@ -25,7 +25,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         if 'author' not in data:
             data['author'] = 'Admin'
         if 'date' not in data:
-            data['date'] = timezone.now()
+            data['date'] = timezone.now().isoformat()
         if 'likes' not in data:
             data['likes'] = 0
 
