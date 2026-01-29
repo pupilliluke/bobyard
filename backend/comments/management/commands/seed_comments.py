@@ -33,6 +33,7 @@ class Command(BaseCommand):
         comments_data = data.get('comments', [])
         created_count = 0
 
+        # First pass: create all comments without parents
         for comment_data in comments_data:
             Comment.objects.update_or_create(
                 id=int(comment_data['id']),
@@ -45,6 +46,13 @@ class Command(BaseCommand):
                 }
             )
             created_count += 1
+
+        # Second pass: set parent relationships
+        for comment_data in comments_data:
+            if 'parent' in comment_data and comment_data['parent']:
+                comment = Comment.objects.get(id=int(comment_data['id']))
+                comment.parent_id = int(comment_data['parent'])
+                comment.save()
 
         self.stdout.write(
             self.style.SUCCESS(f'Successfully seeded {created_count} comments')

@@ -94,7 +94,8 @@
             "text": "Since you are going solo, saving time on setup/infra/devops make sense (and focus time on dev). For custom logic, Supabase actually let you write edge custom functions using Deno. It should cover a vast amount of requirements for having a custom backend.",
             "date": "2015-09-01T12:50:00Z",
             "likes": 9,
-            "image": ""
+            "image": "",
+            "parent": 16
         },
         {
             "id": "13",
@@ -102,7 +103,8 @@
             "text": "I used to use nextjs with supabase, but recently switched to nextjs with planetscale and clerky. both hosted on vercel. nothing against supabase btw, both stacks are great, just trying the https://create.t3.gg/ stack to learn some new things.",
             "date": "2015-09-01T12:55:00Z",
             "likes": 31,
-            "image": ""
+            "image": "",
+            "parent": 16
         },
         {
             "id": "14",
@@ -110,7 +112,8 @@
             "text": "Depends. I like to use a Python framework for ML-based projects (Django or FastAPI). For the easiest stack, I generally use Next/Supabase",
             "date": "2015-09-01T13:00:00Z",
             "likes": 8,
-            "image": ""
+            "image": "",
+            "parent": 16
         },
         {
             "id": "15",
@@ -118,7 +121,8 @@
             "text": "I've been using NestJs for the backend of a sass I've been building. I don't think I'll use it again on my next project. I've been itching to learn something else outside the JS ecosystem like Rails or Phoenix. Supabase looks cool too though for a solo dev.",
             "date": "2015-09-01T13:05:00Z",
             "likes": 7,
-            "image": ""
+            "image": "",
+            "parent": 16
         },
         {
             "id": "16",
