@@ -1,0 +1,17 @@
+# Example folder (reference only, not part of project)
+example/
+
+# IDE
+.vscode/
+.idea/
+.history/
+
+# Claude
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Website frameworks reference
+website-frameworks/
