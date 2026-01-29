@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { fetchComments, createComment, updateComment, deleteComment } from './api';
+import { fetchComments, createComment, updateComment, deleteComment, deleteAllComments, restoreComments } from './api';
 import CommentList from './components/CommentList';
 import CommentForm from './components/CommentForm';
 import './App.css';
@@ -13,6 +13,8 @@ function App() {
   const [collapsedComments, setCollapsedComments] = useState(new Set());
   const [replyingTo, setReplyingTo] = useState(null);
   const [votes, setVotes] = useState({});
+  const [deletedBackup, setDeletedBackup] = useState(null);
+  const [showUndo, setShowUndo] = useState(false);
 
   useEffect(() => {
     loadComments();
@@ -147,6 +149,37 @@ function App() {
     }
   }
 
+  async function handleDeleteAll() {
+    if (!window.confirm('Are you sure you want to delete all comments?')) return;
+
+    try {
+      const result = await deleteAllComments();
+      setDeletedBackup(result.comments);
+      setComments([]);
+      setShowUndo(true);
+      // Auto-hide undo after 10 seconds
+      setTimeout(() => {
+        setShowUndo(false);
+        setDeletedBackup(null);
+      }, 10000);
+    } catch {
+      setError('Failed to delete comments');
+    }
+  }
+
+  async function handleUndo() {
+    if (!deletedBackup) return;
+
+    try {
+      await restoreComments(deletedBackup);
+      await loadComments();
+      setShowUndo(false);
+      setDeletedBackup(null);
+    } catch {
+      setError('Failed to restore comments');
+    }
+  }
+
   return (
     <div className="app">
       {/* Navbar */}
@@ -181,6 +214,11 @@ function App() {
         <div className="header-top">
           <h1>Comments</h1>
           <span className="comment-count">{countAllComments(comments)} comments</span>
+          {comments.length > 0 && (
+            <button className="delete-all-btn" onClick={handleDeleteAll}>
+              Delete All
+            </button>
+          )}
         </div>
 
         {/* Sort Controls */}
@@ -199,6 +237,14 @@ function App() {
           </div>
         </div>
       </header>
+
+      {/* Undo notification */}
+      {showUndo && (
+        <div className="undo-notification">
+          <span>All comments deleted</span>
+          <button className="undo-btn" onClick={handleUndo}>Undo</button>
+        </div>
+      )}
 
       <main className="main">
         <CommentForm onSubmit={handleAddComment} />

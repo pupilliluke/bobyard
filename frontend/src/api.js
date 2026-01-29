@@ -40,3 +40,21 @@ export async function deleteComment(id) {
   });
   if (!response.ok) throw new Error('Failed to delete comment');
 }
+
+export async function deleteAllComments() {
+  const response = await fetch(`${API_BASE}/comments/delete-all/`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) throw new Error('Failed to delete all comments');
+  return response.json();
+}
+
+export async function restoreComments(comments) {
+  const response = await fetch(`${API_BASE}/comments/restore/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ comments }),
+  });
+  if (!response.ok) throw new Error('Failed to restore comments');
+  return response.json();
+}

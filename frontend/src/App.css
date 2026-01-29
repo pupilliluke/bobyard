@@ -120,6 +120,51 @@
   font-weight: 400;
 }
 
+.delete-all-btn {
+  margin-left: auto;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.delete-all-btn:hover {
+  background: #b91c1c;
+}
+
+/* Undo notification */
+.undo-notification {
+  max-width: 740px;
+  margin: 0 auto 16px;
+  padding: 12px 16px;
+  background: #1e293b;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: calc(100% - 40px);
+}
+
+.undo-btn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.undo-btn:hover {
+  background: #2563eb;
+}
+
 /* Sort Controls */
 .sort-controls {
   display: flex;
