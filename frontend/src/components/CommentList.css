@@ -3,6 +3,17 @@
   flex-direction: column;
 }
 
+.comment-list.nested {
+  margin-left: 24px;
+  padding-left: 16px;
+  border-left: 2px solid #e2e8f0;
+}
+
+.comment-thread {
+  display: flex;
+  flex-direction: column;
+}
+
 .empty-state {
   text-align: center;
   padding: 60px 24px;

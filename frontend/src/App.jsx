@@ -67,10 +67,17 @@ function App() {
     }
   }
 
-  async function handleAddComment(text) {
+  async function handleAddComment(text, parentId = null) {
     try {
-      const newComment = await createComment({ text });
-      setComments([newComment, ...comments]);
+      const payload = parentId ? { text, parent: parentId } : { text };
+      const newComment = await createComment(payload);
+
+      if (parentId) {
+        // Add reply to parent's replies array
+        setComments(addReplyToParent(comments, parentId, newComment));
+      } else {
+        setComments([newComment, ...comments]);
+      }
     } catch {
       // Fallback: create comment locally when backend is offline
       const newComment = {
@@ -79,10 +86,43 @@ function App() {
         text: text,
         date: new Date().toISOString(),
         likes: 0,
-        image: ''
+        image: '',
+        parent: parentId,
+        replies: []
       };
-      setComments([newComment, ...comments]);
+
+      if (parentId) {
+        setComments(addReplyToParent(comments, parentId, newComment));
+      } else {
+        setComments([newComment, ...comments]);
+      }
     }
+  }
+
+  // Helper to recursively add a reply to the correct parent
+  function addReplyToParent(commentList, parentId, newReply) {
+    return commentList.map(comment => {
+      if (comment.id === parentId) {
+        return {
+          ...comment,
+          replies: [...(comment.replies || []), newReply]
+        };
+      }
+      if (comment.replies && comment.replies.length > 0) {
+        return {
+          ...comment,
+          replies: addReplyToParent(comment.replies, parentId, newReply)
+        };
+      }
+      return comment;
+    });
+  }
+
+  // Count all comments including replies
+  function countAllComments(commentList) {
+    return commentList.reduce((count, comment) => {
+      return count + 1 + (comment.replies ? countAllComments(comment.replies) : 0);
+    }, 0);
   }
 
   async function handleUpdateComment(id, text) {
@@ -140,7 +180,7 @@ function App() {
       <header className="page-header">
         <div className="header-top">
           <h1>Comments</h1>
-          <span className="comment-count">{comments.length} comments</span>
+          <span className="comment-count">{countAllComments(comments)} comments</span>
         </div>
 
         {/* Sort Controls */}

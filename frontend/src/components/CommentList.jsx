@@ -14,9 +14,10 @@ function CommentList({
   onToggleCollapse,
   replyingTo,
   onReply,
-  onSubmitReply
+  onSubmitReply,
+  depth = 0
 }) {
-  if (comments.length === 0) {
+  if (comments.length === 0 && depth === 0) {
     return (
       <div className="empty-state">
         <div className="empty-icon">
@@ -31,25 +32,45 @@ function CommentList({
   }
 
   return (
-    <div className="comment-list">
+    <div className={`comment-list ${depth > 0 ? 'nested' : ''}`}>
       {comments.map((comment) => (
-        <CommentItem
-          key={comment.id}
-          comment={comment}
-          isEditing={editingId === comment.id}
-          onEdit={() => onEdit(comment.id)}
-          onUpdate={(text) => onUpdate(comment.id, text)}
-          onDelete={() => onDelete(comment.id)}
-          onCancelEdit={onCancelEdit}
-          vote={votes[comment.id] || 0}
-          onVote={(direction) => onVote(comment.id, direction)}
-          isCollapsed={collapsedComments.has(comment.id)}
-          onToggleCollapse={() => onToggleCollapse(comment.id)}
-          isReplying={replyingTo === comment.id}
-          onReply={() => onReply(comment.id)}
-          onCancelReply={() => onReply(null)}
-          onSubmitReply={onSubmitReply}
-        />
+        <div key={comment.id} className="comment-thread">
+          <CommentItem
+            comment={comment}
+            isEditing={editingId === comment.id}
+            onEdit={() => onEdit(comment.id)}
+            onUpdate={(text) => onUpdate(comment.id, text)}
+            onDelete={() => onDelete(comment.id)}
+            onCancelEdit={onCancelEdit}
+            vote={votes[comment.id] || 0}
+            onVote={(direction) => onVote(comment.id, direction)}
+            isCollapsed={collapsedComments.has(comment.id)}
+            onToggleCollapse={() => onToggleCollapse(comment.id)}
+            isReplying={replyingTo === comment.id}
+            onReply={() => onReply(comment.id)}
+            onCancelReply={() => onReply(null)}
+            onSubmitReply={(text) => onSubmitReply(text, comment.id)}
+          />
+          {/* Render nested replies */}
+          {comment.replies && comment.replies.length > 0 && !collapsedComments.has(comment.id) && (
+            <CommentList
+              comments={comment.replies}
+              editingId={editingId}
+              onEdit={onEdit}
+              onUpdate={onUpdate}
+              onDelete={onDelete}
+              onCancelEdit={onCancelEdit}
+              votes={votes}
+              onVote={onVote}
+              collapsedComments={collapsedComments}
+              onToggleCollapse={onToggleCollapse}
+              replyingTo={replyingTo}
+              onReply={onReply}
+              onSubmitReply={onSubmitReply}
+              depth={depth + 1}
+            />
+          )}
+        </div>
       ))}
     </div>
   );
